@@ -25,5 +25,3 @@ if __name__ == "__main__":
         print(data)
     else:
         print("No se pudieron obtener los datos del clima.")
-
-
