@@ -216,33 +216,40 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 
 const dotIcon = L.divIcon({
     className: '',
-    html: '<div style="width:10px;height:10px;background:#0ea5e9;border-radius:50%;border:2px solid #38bdf8;box-shadow:0 0 8px rgba(14,165,233,0.6)"></div>',
-    iconSize: [10, 10],
-    iconAnchor: [5, 5],
+    html: '<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;"><div style="width:10px;height:10px;background:#0ea5e9;border-radius:50%;border:2px solid #38bdf8;box-shadow:0 0 8px rgba(14,165,233,0.6)"></div></div>',
+    iconSize: [44, 44],
+    iconAnchor: [22, 22],
+    popupAnchor: [0, -22],
 });
+
+function fetchAndShowPopup(marker, city) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${config.API_KEY}&units=metric&lang=en`;
+
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            const desc = data.weather[0].description;
+            const description = desc.charAt(0).toUpperCase() + desc.slice(1);
+
+            marker.bindPopup(`
+                <div style="font-family:'Inter',sans-serif;min-width:160px">
+                    <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px">${data.name}</div>
+                    <div style="font-size:1.5rem;font-weight:700;margin-bottom:4px">${Math.round(data.main.temp)}&deg;C</div>
+                    <div style="font-size:0.8rem;opacity:0.75;margin-bottom:8px">${description}</div>
+                    <div style="font-size:0.78rem;opacity:0.6">
+                        Humidity: ${data.main.humidity}% &nbsp;|&nbsp; Wind: ${data.wind.speed} m/s
+                    </div>
+                </div>
+            `, { maxWidth: 220 }).openPopup();
+        });
+}
 
 capitals.forEach(city => {
     const marker = L.marker([city.lat, city.lon], { icon: dotIcon }).addTo(map);
 
-    marker.on('click', () => {
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${config.API_KEY}&units=metric&lang=en`;
-
-        fetch(url)
-            .then(r => r.json())
-            .then(data => {
-                const desc = data.weather[0].description;
-                const description = desc.charAt(0).toUpperCase() + desc.slice(1);
-
-                marker.bindPopup(`
-                    <div style="font-family:'Inter',sans-serif;min-width:160px">
-                        <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px">${data.name}</div>
-                        <div style="font-size:1.5rem;font-weight:700;margin-bottom:4px">${Math.round(data.main.temp)}&deg;C</div>
-                        <div style="font-size:0.8rem;opacity:0.75;margin-bottom:8px">${description}</div>
-                        <div style="font-size:0.78rem;opacity:0.6">
-                            Humidity: ${data.main.humidity}% &nbsp;|&nbsp; Wind: ${data.wind.speed} m/s
-                        </div>
-                    </div>
-                `, { maxWidth: 220 }).openPopup();
-            });
+    marker.on('click', () => fetchAndShowPopup(marker, city));
+    marker.on('touchend', (e) => {
+        L.DomEvent.stopPropagation(e);
+        fetchAndShowPopup(marker, city);
     });
 });
