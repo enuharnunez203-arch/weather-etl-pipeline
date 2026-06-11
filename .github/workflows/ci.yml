@@ -1,0 +1,16 @@
+name: HeatZone CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Build Docker image
+        run: docker build --no-cache -t heatzone ./heatzone
+      
+      - name: Run container
+        run: docker run -d -p 8080:80 heatzone
