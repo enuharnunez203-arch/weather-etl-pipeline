@@ -98,7 +98,7 @@ function getWeather() {
         showMessage('Please enter a location to search.');
         return;
     }
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${config.API_KEY}&units=metric&lang=en`;
+    const url = `/weather?city=${location}`;
     fetchWeather(url);
 }
 
