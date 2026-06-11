@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 import requests
 import os
 
-app = Flask(__name__, static_folder='..', static_url_path='')
+app = Flask(__name__, static_folder='.', static_url_path='')
 
 @app.route('/')
 def index():
@@ -11,27 +11,26 @@ def index():
 @app.route('/weather')
 def weather():
     city = request.args.get('city')
-    if not city:
-        return jsonify({'error': 'Missing city parameter'}), 400
-
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
     api_key = os.getenv('API_KEY')
+
     if not api_key:
         return jsonify({'error': 'API key not configured'}), 500
 
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=en"
-    response = requests.get(url)
-    data = response.json()
+    if lat and lon:
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric&lang=en"
+    elif city:
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=en"
+    else:
+        return jsonify({'error': 'Missing city or coordinates'}), 400
 
-    if data.get('cod') != 200:
-        return jsonify({'error': data.get('message', 'City not found')}), 404
-
-    fetched_data = {
-        'city': data.get('name'),
-        'temperature': data['main']['temp'],
-        'description': data['weather'][0]['description'],
-        'icon': data['weather'][0]['icon']
-    }
-    return jsonify(fetched_data)
+    try:
+        response = requests.get(url)
+        data = response.json()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': 'Failed to fetch weather data'}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
