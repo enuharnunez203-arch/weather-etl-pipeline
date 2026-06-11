@@ -3,47 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeatherApp - HeatZone</title>
-    <link rel="stylesheet" href="/heatzone/style/style.css">
-    ,<script src="/heatzone/backend/config.js"></script>
-    <script src="/heatzone/backend/app.js" defer></script>
+    <title>HeatZone — Weather</title>
+    <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style/style.css">
+    <script src="backend/config.js"></script>
+    <script src="backend/app.js" defer></script>
 </head>
 
 <body>
+    <div class="top-bar"></div>
+
     <header>
-        <h1>Welcome to HeatZone</h1>
-        <p>Stay ahead of the weather with our comprehensive and user-friendly weather application. Whether you're planning your day, week, or month, HeatZone provides you with accurate and up-to-date weather information to help you make informed decisions.</p>
+        <div class="brand-tag">
+            <span class="brand-tag-dot"></span>
+            Live Weather Data
+        </div>
+        <h1>Welcome to <span class="gradient-text">HeatZone</span></h1>
+        <p>Stay ahead of the weather with accurate, real-time information. Plan your day with confidence using data you can trust.</p>
     </header>
+
     <div class="features">
         <div class="feature-card">
-            <div class="icon">🌡️</div>
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                </svg>
+            </div>
             <h3>Current Weather</h3>
-            <p>Get real-time updates on temperature, humidity, wind speed, and more for your location.</p>
+            <p>Real-time temperature, humidity, wind speed, and conditions for any location worldwide.</p>
         </div>
         <div class="feature-card">
-            <div class="icon">🔄</div>
-            <h3>Updating everytime</h3>
-            <p>With real-time updates, you'll always have the latest weather information at your fingertips.</p>
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"/>
+                    <polyline points="1 20 1 14 7 14"/>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                </svg>
+            </div>
+            <h3>Real-Time Updates</h3>
+            <p>Always current data — no stale forecasts. Every search pulls the latest available readings.</p>
         </div>
         <div class="feature-card">
-            <div class="icon">🔒</div>
-            <h3>Confidence</h3>
-            <p>Trust HeatZone for accurate and reliable weather information.</p>
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                </svg>
+            </div>
+            <h3>Reliable Source</h3>
+            <p>Powered by OpenWeatherMap — trusted by developers and meteorologists worldwide.</p>
         </div>
     </div>
-    <div id="why-choose" class="why-choose">
-        <h2>Why Choose HeatZone?</h2>
-        <p>HeatZone is designed to provide you with the most accurate and reliable weather information. Our advanced algorithms and data sources ensure that you receive timely updates, helping you stay prepared for any weather conditions. Whether you're a commuter, outdoor enthusiast, or just want to stay informed, HeatZone is the perfect tool for you.</p>
+
+    <div class="why-choose">
+        <div class="why-choose-inner">
+            <h2>Why Choose HeatZone?</h2>
+            <p>HeatZone is built for precision and simplicity. Our direct connection to live weather APIs means you get the most accurate readings available, without noise or clutter. Whether you are commuting, planning outdoor activities, or just staying informed, HeatZone gives you the data you need in seconds.</p>
+        </div>
     </div>
+
     <div class="search-section">
+        <label class="search-label" for="locationInput">Search Location</label>
         <div class="search-wrapper">
-            <input type="text" placeholder="Enter your location" id="locationInput">
+            <input type="text" placeholder="City, country or coordinates" id="locationInput">
             <button id="searchBtn">Get Weather</button>
         </div>
+        <div class="geo-btn-wrapper">
+            <button id="geoBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Use my location
+            </button>
+        </div>
     </div>
-    <div id="weatherInfo">"HERE IS THE WEATHER INFORMATION"</div>
+
+    <div id="weatherInfo">
+        <div class="weather-card">
+            <p class="weather-placeholder">Enter a location above to see current weather conditions.</p>
+        </div>
+    </div>
+    <div class = "map-section">
+        <h2>Weather Map</h2>
+        <div id="map"></div>
+    </div>
     <footer>
         <p>&copy; 2026 HeatZone. All rights reserved.</p>
     </footer>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="backend/map.js" defer></script>
 </body>
 </html>
