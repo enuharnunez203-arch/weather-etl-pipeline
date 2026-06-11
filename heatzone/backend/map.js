@@ -223,7 +223,7 @@ const dotIcon = L.divIcon({
 });
 
 function fetchAndShowPopup(marker, city) {
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${config.API_KEY}&units=metric&lang=en`;
+    const url = `/weather?lat=${city.lat}&lon=${city.lon}`;
 
     fetch(url)
         .then(r => r.json())
